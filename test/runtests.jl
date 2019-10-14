@@ -19,7 +19,7 @@ end
     Random.seed!(2)
     nbits = 6
     nbatchs = 4
-    nhiddens = [10,20,30]
+    nhiddens = [10, 20, 30]
     model = build_model(nbits, nhiddens)
     samples = rand(0:1, nbits, nbatchs)
 
@@ -30,7 +30,7 @@ end
             g = gradient(f, model, samples, n, b)[2]
             dependency = (g .!= 0)
             correct = BitArray( x< n && y==b  for x = 1:nbits, y = 1:nbatchs)
-            @test dependency == correct
+            @test all(dependency .<= correct)
         end
     end
 end
