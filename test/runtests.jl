@@ -1,7 +1,7 @@
 using Test, Random, StatsBase
 using Zygote
 using VAN
-using VAN: bitarray, get_logp, network
+using VAN: bitarray, get_logp, network, gen_samples
 
 @testset "normalize" begin
     Random.seed!(2)
@@ -33,4 +33,18 @@ end
             @test all(dependency .<= correct)
         end
     end
+end
+
+@testset "gradscorefunction" begin
+    Random.seed!(2)
+    nbits = 6
+    nbatchs = 10000
+    nhiddens = [10, 20]
+    model = build_model(nbits, nhiddens)
+    samples = gen_samples(model, nbatchs)
+
+    score(model, samples) = mean(get_logp(model, samples))
+    grad = gradient(score, model, samples)[1]
+    δ = collect(Iterators.flatten((grad.W..., grad.b...)))
+    @test all(isapprox.(δ, 0.0, atol=1e-2))
 end
