@@ -21,13 +21,8 @@ end
 #    max.(x, T(0))
 #end
 
-relu(x) = max.(x, 0)
-
-function sigmoid(x::Union{T, AbstractArray{T}}) where T <: Number
-    T(1) ./ (T(1) .+ exp.(-x))
-end
-
-#simoid(x) =  1.0 ./ (1.0 .+ exp.(-x))
+relu(x::Real) = max(zero(x), x)
+sigmoid(x::Real) = one(x) / (one(x) + exp(-x))
 
 #follows https://github.com/karpathy/pytorch-made/blob/master/made.py#L68
 function createmasks(order::Vector{Int}, hs::Vector{Int})

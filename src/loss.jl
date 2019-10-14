@@ -1,5 +1,5 @@
-using Flux.Optimise:update! 
-export train
+using Flux.Optimise:update!
+export train, loss
 
 function get_energy(K::Array, samples)
     energy = sum(samples .* (K*samples), dims=1)
