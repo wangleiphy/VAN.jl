@@ -10,16 +10,14 @@ end
 
 function build_model(nbits, nhiddens)
     masks = createmasks(collect(1:nbits), nhiddens)
+
     append!(nhiddens, nbits)
     prepend!(nhiddens, nbits)
     W = ntuple(i -> rand(nhiddens[i+1], nhiddens[i]), length(nhiddens)-1)
-    b = ntuple(i -> randn(nhiddens[i+1]), length(nhiddens)-1)
+    b = ntuple(i -> zeros(nhiddens[i+1]), length(nhiddens)-1)
+
     AutoRegressiveModel(nbits, masks, W, b)
 end
-
-#function relu(x::AbstractArray{T}) where T
-#    max.(x, T(0))
-#end
 
 relu(x::Real) = max(zero(x), x)
 sigmoid(x::Real) = one(x) / (one(x) + exp(-x))
