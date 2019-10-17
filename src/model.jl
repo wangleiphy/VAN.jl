@@ -11,8 +11,8 @@ end
 function build_model(nbits, nhiddens)
     masks = createmasks(collect(1:nbits), nhiddens)
 
-    append!(nhiddens, nbits)
-    prepend!(nhiddens, nbits)
+    nhiddens = [nbits, nhiddens..., nbits]
+
     W = ntuple(i -> rand(nhiddens[i+1], nhiddens[i]), length(nhiddens)-1)
     b = ntuple(i -> zeros(nhiddens[i+1]), length(nhiddens)-1)
 
