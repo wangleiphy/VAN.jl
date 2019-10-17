@@ -8,25 +8,30 @@ struct AutoRegressiveModel{N, T}
     b::NTuple{N, Vector{T}}
 end
 
+#some useful functions
+glorot_uniform(dims...) = (rand(Float64, dims...) .- 0.5) .* sqrt(24.0/sum(dims))
+
+relu(x::Real) = max(zero(x), x)
+
+sigmoid(x::Real) = one(x) / (one(x) + exp(-x))
+
+softplus(x::Real) = ifelse(x > 0, x + log1p(exp(-x)), log1p(exp(x)))
+
 function build_model(nbits, nhiddens)
     masks = createmasks(collect(1:nbits), nhiddens)
 
     nhiddens = [nbits, nhiddens..., nbits]
-
-    W = ntuple(i -> rand(nhiddens[i+1], nhiddens[i]), length(nhiddens)-1)
+    W = ntuple(i -> glorot_uniform(nhiddens[i+1], nhiddens[i]), length(nhiddens)-1)
     b = ntuple(i -> zeros(nhiddens[i+1]), length(nhiddens)-1)
 
     AutoRegressiveModel(nbits, masks, W, b)
 end
 
-relu(x::Real) = max(zero(x), x)
-sigmoid(x::Real) = one(x) / (one(x) + exp(-x))
-
 #follows https://github.com/karpathy/pytorch-made/blob/master/made.py#L68
 function createmasks(order::Vector{Int}, hs::Vector{Int})
     D = length(order)
     L = length(hs)
-    ## assign each unit in the hidden layer an integer between 1:D-1
+    ## assign each unit in the hidden layer an integer
     hs_index = Dict()
     hs_index[0] = collect(1:D)
     for l in 1:L
@@ -75,3 +80,8 @@ function model_dispatch!(model::AutoRegressiveModel{N}, θ) where N
         model.b[n] .= θ[N+n]
     end
 end
+
+#function model_dispatch!(model::AutoRegressiveModel{N}, W, b) where N
+#    model.W = W
+#    model.b = b
+#end
