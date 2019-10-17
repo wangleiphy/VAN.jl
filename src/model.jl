@@ -1,5 +1,5 @@
 using StatsBase
-export build_model, AutoRegressiveModel
+export build_model
 
 struct AutoRegressiveModel{N, T}
     nbits::Int

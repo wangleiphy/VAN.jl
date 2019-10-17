@@ -1,7 +1,6 @@
 using Test, Random, StatsBase
 using Zygote
-using VAN
-using VAN: bitarray, get_logp, network, gen_samples
+using VAN: bitarray, get_energy, get_logp, free_energy, network, gen_samples, build_model
 
 @testset "normalize" begin
     Random.seed!(2)
@@ -13,6 +12,25 @@ using VAN: bitarray, get_logp, network, gen_samples
     norm = sum(exp.(logp))
 
     @test isapprox(norm, 1.0, rtol=1e-5)
+end
+
+@testset "sample" begin
+    Random.seed!(3)
+    nbits = 4
+    K = randn(nbits, nbits)
+    K = (K+K')/2
+    nsamples = 1000
+    nhiddens = [100]
+    β = 1.0
+    model = build_model(nbits, nhiddens)
+
+    configs = bitarray(collect(0:(1<<nbits-1)), nbits)
+    logp = get_logp(model, configs)
+    f = sum(exp.(logp) .* (get_energy(K, configs) .+ get_logp(model, configs)))
+
+    samples = gen_samples(model, nsamples)
+    f_sample = free_energy(K, model, samples)
+    @test isapprox(f, f_sample, rtol=1e-2)
 end
 
 @testset "autoregressive" begin

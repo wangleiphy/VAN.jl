@@ -3,7 +3,7 @@ using StatsBase
 using Random
 Random.seed!(42)
 
-using VAN
+using VAN: loss, train
 
 nbits = 10
 nsamples = 1000
