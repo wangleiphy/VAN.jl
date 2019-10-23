@@ -70,9 +70,8 @@ function gen_samples(model::AutoRegressiveModel, nbatch::Int)
     x
 end
 
-function model_parameters(model::AutoRegressiveModel)
-    (model.W..., model.b...)
-end
+model_parameters(model::AutoRegressiveModel) = (model.W..., model.b...) 
+unpack_gradient(model::AutoRegressiveModel, g) = (g.W..., g.b...)
 
 function model_dispatch!(model::AutoRegressiveModel{N}, θ) where N
     for n in 1:N
@@ -80,8 +79,3 @@ function model_dispatch!(model::AutoRegressiveModel{N}, θ) where N
         model.b[n] .= θ[N+n]
     end
 end
-
-#function model_dispatch!(model::AutoRegressiveModel{N}, W, b) where N
-#    model.W = W
-#    model.b = b
-#end
