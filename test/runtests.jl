@@ -19,14 +19,14 @@ end
     nbits = 4
     K = randn(nbits, nbits)
     K = (K+K')/2
-    nsamples = 1000
+    nsamples = 5000
     nhiddens = [100]
     β = 1.0
     model = build_model(nbits, nhiddens)
 
     configs = bitarray(collect(0:(1<<nbits-1)), nbits)
     logp = get_logp(model, configs)
-    f = sum(exp.(logp) .* (get_energy(K, configs) .+ get_logp(model, configs)))
+    f = sum(exp.(logp) .* (get_energy(K, configs) + get_logp(model, configs)))
 
     samples = gen_samples(model, nsamples)
     f_sample = free_energy(K, model, samples)
