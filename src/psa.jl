@@ -30,6 +30,5 @@ model_parameters(model::PSAModel) = (model.w, )
 unpack_gradient(model::PSAModel, g) = (g.w, )
 
 function model_dispatch!(model::PSAModel, θ)
-    model.w .= θ
+    model.w .= θ[1]
 end
-
