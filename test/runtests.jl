@@ -1,12 +1,13 @@
 using Test, Random, StatsBase
 using Zygote
-using VAN: bitarray, get_energy, get_logp, free_energy, network, gen_samples, build_model
+using VAN
+using VAN:bitarray, get_energy, free_energy, network
 
 @testset "normalize" begin
     Random.seed!(2)
     nbits = 6
     nhiddens = [10,10]
-    model = build_model(nbits, nhiddens)
+    model = AutoRegressiveModel(nbits, nhiddens)
     configs = bitarray(collect(0:(1<<nbits-1)), nbits)
     logp = get_logp(model, configs)
     norm = sum(exp.(logp))
@@ -22,7 +23,7 @@ end
     nsamples = 5000
     nhiddens = [100]
     β = 1.0
-    model = build_model(nbits, nhiddens)
+    model = AutoRegressiveModel(nbits, nhiddens)
 
     configs = bitarray(collect(0:(1<<nbits-1)), nbits)
     logp = get_logp(model, configs)
@@ -38,7 +39,7 @@ end
     nbits = 6
     nbatchs = 4
     nhiddens = [10, 20, 30]
-    model = build_model(nbits, nhiddens)
+    model = AutoRegressiveModel(nbits, nhiddens)
     samples = rand(0:1, nbits, nbatchs)
 
     f(model, samples, n, b) = network(model, samples)[n, b]
@@ -58,7 +59,7 @@ end
     nbits = 6
     nbatchs = 10000
     nhiddens = [10, 20]
-    model = build_model(nbits, nhiddens)
+    model = AutoRegressiveModel(nbits, nhiddens)
     samples = gen_samples(model, nbatchs)
 
     score(model, samples) = mean(get_logp(model, samples))

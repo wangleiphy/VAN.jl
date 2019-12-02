@@ -7,4 +7,13 @@ using Zygote: @adjoint, @nograd
         return (nothing, adjmodel, nothing)
     end
 end
+
+@adjoint function PSAModel(nbit::Int) 
+    PSAmodel(nbit) , _ -> nothing 
+end 
+
+@adjoint function AutoRegressiveModel(nbit::Int, nhiddens) 
+    AutoRegressivemodel(nbit) , _ -> nothing 
+end 
+
 @nograd gen_samples, createmasks
