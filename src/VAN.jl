@@ -1,7 +1,7 @@
 module VAN
 
 include("sampler.jl")
-include("van.jl")
+include("arm.jl")
 include("psa.jl")
 include("exact.jl")
 include("loss.jl")
