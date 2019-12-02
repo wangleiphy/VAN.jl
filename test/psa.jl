@@ -41,6 +41,6 @@ end
 
     score(model, samples) = mean(get_logp(model, samples))
     grad = gradient(score, model, samples)[1]
-    δ = collect(Iterators.flatten((grad.W..., grad.b...)))
-    @test all(isapprox.(δ, 0.0, atol=1e-2))
+    @show grad.w 
+    @test all(isapprox.(grad.w, 0.0, atol=1e-1))
 end
