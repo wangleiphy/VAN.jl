@@ -22,8 +22,8 @@ function loss_reinforce(K::Matrix{T}, model::AbstractSampler, samples) where T <
 end
 
 function grad_model(K::Matrix{T}, model::AbstractSampler, samples) where T <: Real
-    model_grad = gradient(loss_reinforce, K, model, samples)[2]
-    (model_grad.W..., model_grad.b...)
+    grad = gradient(loss_reinforce, K, model, samples)[2]
+    unpack_gradient(model, grad)
 end
 
 function train(K::Matrix{T}, model::AbstractSampler; optimizer=ADAM(0.1), nbatch::Int=100, niter::Int=100) where T <: Real
