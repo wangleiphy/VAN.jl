@@ -3,17 +3,19 @@ using StatsBase
 using Random
 Random.seed!(42)
 
-using VAN: loss, train
+using VAN
+using VAN:loss, train
 
 nbits = 10
 nsamples = 1000
-nhiddens = [10, 20, 10]
+nhiddens = [500]
 
 K = randn(nbits, nbits)
 K = (K+K')/2
 @show exact_free_energy(K)
 
-model = build_model(nbits, nhiddens)
+model = PSAModel(nbits)
+#model = AutoRegressiveModel(nbits, nhiddens)
 
 loss(K, model, nsamples)
 
