@@ -1,5 +1,6 @@
 using Test, Random, StatsBase
 using Zygote
+using ChainRulesCore: Tangent
 using VAN
 using VAN:bitarray, get_energy, free_energy, network
 
@@ -31,6 +32,7 @@ end
 
     samples = gen_samples(model, nsamples)
     f_sample = free_energy(K, model, samples)
+    @test Zygote.gradient(free_energy, K, model, samples)[2] isa Tangent
     @test isapprox(f, f_sample, rtol=1e-2)
 end
 

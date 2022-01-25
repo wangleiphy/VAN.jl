@@ -1,5 +1,5 @@
 using StatsBase
-export PSAModel, get_logp, gen_samples, model_parameters, unpack_gradient, model_dispatch!
+export PSAModel, get_logp, gen_samples, model_parameters, model_dispatch!
 
 struct PSAModel{T} <: AbstractSampler
     nbits::Int
@@ -27,7 +27,6 @@ function gen_samples(model::PSAModel, nbatch::Int)
 end
 
 model_parameters(model::PSAModel) = (model.w, )
-unpack_gradient(model::PSAModel, g) = (g.w, )
 
 function model_dispatch!(model::PSAModel, θ)
     model.w .= θ[1]

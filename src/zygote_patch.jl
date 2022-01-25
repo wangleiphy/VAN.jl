@@ -1,19 +1,15 @@
-using Zygote
-using Zygote: @adjoint, @nograd
+using ChainRulesCore: @non_differentiable, NoTangent, Tangent
+import ChainRulesCore
 
-@adjoint function free_energy(K::Matrix{T}, model::AbstractSampler, samples) where T <: Real
+function ChainRulesCore.rrule(::typeof(free_energy), K::Matrix{T}, model::AbstractSampler, samples) where T <: Real
     free_energy(K, model, samples), function (adjy)
-        adjmodel = grad_model(K, model, samples) .* adjy
-        return (nothing, adjmodel, nothing)
+        nt = map(x->x === nothing ? NoTangent() : x .* adjy, grad_model(K, model, samples))
+        adjmodel = Tangent{typeof(model)}(; nt...)
+        return (NoTangent(), NoTangent(), adjmodel, NoTangent())
     end
 end
 
-@adjoint function PSAModel(nbit::Int) 
-    PSAmodel(nbit) , _ -> nothing 
-end 
-
-@adjoint function AutoRegressiveModel(nbit::Int, nhiddens) 
-    AutoRegressivemodel(nbit) , _ -> nothing 
-end 
-
-@nograd gen_samples, createmasks
+@non_differentiable gen_samples(model, nbatch)
+@non_differentiable createmasks(order, hs)
+@non_differentiable AutoRegressiveModel(nbits, nhidden)
+@non_differentiable PSAModel(nbits)
