@@ -1,5 +1,3 @@
-export exact_free_energy
-
 function bitarray(v::Vector{T}, num_bit::Int)::BitArray{2} where T<:Number
     #ba = BitArray{2}(0, 0)
     ba = BitArray(undef, 0, 0)

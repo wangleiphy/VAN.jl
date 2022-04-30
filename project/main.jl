@@ -1,4 +1,4 @@
-using Flux.Optimise: ADAM, update!
+using Optimisers: ADAM, update!
 using StatsBase
 using Random
 Random.seed!(42)

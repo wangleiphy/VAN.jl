@@ -1,6 +1,3 @@
-using StatsBase
-export PSAModel, get_logp, gen_samples, model_parameters, model_dispatch!
-
 struct PSAModel{T} <: AbstractSampler
     nbits::Int
     w::Vector{T}
