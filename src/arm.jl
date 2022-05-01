@@ -1,6 +1,3 @@
-using StatsBase
-export AutoRegressiveModel, get_logp, model_dispatch!, gen_samples, model_parameters
-
 struct AutoRegressiveModel{N, T} <: AbstractSampler
     nbits::Int
     masks::Vector{BitMatrix}

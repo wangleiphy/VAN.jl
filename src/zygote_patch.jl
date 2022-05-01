@@ -1,6 +1,3 @@
-using ChainRulesCore: @non_differentiable, NoTangent, Tangent
-import ChainRulesCore
-
 function ChainRulesCore.rrule(::typeof(free_energy), K::Matrix{T}, model::AbstractSampler, samples) where T <: Real
     free_energy(K, model, samples), function (adjy)
         nt = map(x->x === nothing ? NoTangent() : x .* adjy, grad_model(K, model, samples))

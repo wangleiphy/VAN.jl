@@ -1,5 +1,16 @@
 module VAN
 
+using StatsBase
+import ChainRulesCore
+using ChainRulesCore: @non_differentiable, NoTangent, Tangent
+using Optimisers: update!
+import Zygote
+
+export AutoRegressiveModel, get_logp, model_dispatch!, gen_samples, model_parameters
+export exact_free_energy
+export AbstractSampler
+export PSAModel, get_logp, gen_samples, model_parameters, model_dispatch!
+
 include("sampler.jl")
 include("arm.jl")
 include("psa.jl")

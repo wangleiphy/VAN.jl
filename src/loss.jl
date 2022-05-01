@@ -1,6 +1,3 @@
-using Flux.Optimise:update!
-import Flux
-
 function get_energy(K::Matrix{T}, samples) where T <: Real
     energy = sum(samples .* (K*samples), dims=1)
 end
@@ -23,7 +20,7 @@ function loss_reinforce(K::Matrix{T}, model::AbstractSampler, samples) where T <
 end
 
 function grad_model(K::Matrix{T}, model::AbstractSampler, samples) where T <: Real
-    return Flux.gradient(loss_reinforce, K, model, samples)[2]
+    return Zygote.gradient(loss_reinforce, K, model, samples)[2]
 end
 
 function train(K::Matrix{T}, model::AbstractSampler; optimizer=ADAM(0.1), nbatch::Int=100, niter::Int=100) where T <: Real
